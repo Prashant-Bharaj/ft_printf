@@ -24,6 +24,10 @@ SRC         = $(SRC_DIR)/ft_printf.c \
 		$(SRC_DIR)/convert_hex.c
 OBJ         = $(SRC:.c=.o)
 
+BONUS_DIR   = $(SRC_DIR)/_bonus
+BONUS_SRC   = 
+BONUS_OBJ   = $(BONUS_SRC:.c=.o)
+
 CC          = cc
 CFLAGS      = -Wall -Wextra -Werror -I include -I $(LIBFT_DIR)
 AR          = ar
@@ -40,11 +44,15 @@ $(NAME): $(OBJ) $(LIBFT)
 	cp $(LIBFT) $(NAME)
 	$(AR) $(ARFLAGS) $(NAME) $(OBJ)
 
+bonus: $(LIBFT) $(NAME) $(BONUS_OBJ)
+	$(AR) $(ARFLAGS) $(NAME) $(BONUS_OBJ)
+
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	$(RM) $(OBJ)
+	$(RM) $(BONUS_OBJ)
 	$(MAKE) $(CHANGE_DIRECTORY_FLAG) $(LIBFT_DIR) clean
 
 fclean: clean
@@ -53,4 +61,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all bonus clean fclean re
