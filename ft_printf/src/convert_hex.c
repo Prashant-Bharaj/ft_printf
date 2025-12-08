@@ -82,6 +82,8 @@ int	handle_pointer(va_list args, t_flags flags)
 	int					precision;
 
 	ptr = (unsigned long long)va_arg(args, void *);
+	if (ptr == 0)
+		return (putstr_count("(nil)", -1));
 	str = ft_utoa_base(ptr, 16, 0);
 	if (!str)
 		return (0);
