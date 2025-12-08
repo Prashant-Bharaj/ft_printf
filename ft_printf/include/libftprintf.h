@@ -16,6 +16,7 @@
 # include <stdarg.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include "libft.h"
 
 /**
  * @brief A struct to hold all parsed formatting flags for a specifier.
@@ -32,9 +33,33 @@ typedef struct s_flags
 {
 	int	minus;
 	int	zero;
-	// ... add other flags here as you implement them (width, precision, etc.)
+	int	hash;
+	int	plus;
+	int	space;
+	int	width;
+	int	precision;
+	int	precision_set;
 }	t_flags;
 
 int		ft_printf(const char *format, ...);
+
+// Parsing functions
+t_flags	init_flags(void);
+void	parse_flags(const char *format, int *i, t_flags *flags, va_list args);
+
+// Conversion handlers
+int		handle_char(va_list args, t_flags flags);
+int		handle_string(va_list args, t_flags flags);
+int		handle_percent(t_flags flags);
+int		handle_int(va_list args, t_flags flags);
+int		handle_unsigned(va_list args, t_flags flags);
+int		handle_hex(va_list args, t_flags flags, int uppercase);
+int		handle_pointer(va_list args, t_flags flags);
+
+// Utility functions
+int		putchar_count(char c);
+int		putstr_count(char *str, int precision);
+int		print_padding(int count, int zero_flag);
+char	*ft_utoa_base(unsigned long long n, int base, int uppercase);
 
 #endif

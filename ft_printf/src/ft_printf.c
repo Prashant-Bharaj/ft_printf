@@ -12,46 +12,43 @@
 
 #include "libftprintf.h"
 
-
-static int	print_char(char c)
-{
-	write(1, &c, 1);
-	return (1);
-}
-
-/**
- * @brief Initializes the flags struct to default values.
- */
-static t_flags	init_flags(void)
-{
-	t_flags	flags;
-
-	flags.minus = 0;
-	flags.zero = 0;
-	// ... initialize other flags
-	return (flags);
-}
-
 static int	handle_format(char specifier, va_list args, t_flags flags)
 {
-	// The 'flags' struct now contains all formatting rules.
-	// This function is now much simpler.
-	(void)flags; // Suppress unused variable warning for now.
-
 	if (specifier == '%')
-		return (print_char('%'));
-	if (specifier == 'c')
+		return (handle_percent(flags));
+	else if (specifier == 'c')
+		return (handle_char(args, flags));
+	else if (specifier == 's')
+		return (handle_string(args, flags));
+	else if (specifier == 'd' || specifier == 'i')
+		return (handle_int(args, flags));
+	else if (specifier == 'u')
+		return (handle_unsigned(args, flags));
+	else if (specifier == 'x')
+		return (handle_hex(args, flags, 0));
+	else if (specifier == 'X')
+		return (handle_hex(args, flags, 1));
+	else if (specifier == 'p')
+		return (handle_pointer(args, flags));
+	else
+		return (0);
+}
+
+static int	process_format_spec(const char *format, int *i, va_list args)
+{
+	t_flags	flags;
+	int		count;
+
+	count = 0;
+	(*i)++;
+	flags = init_flags();
+	parse_flags(format, i, &flags, args);
+	if (format[*i])
 	{
-		// TODO: Implement width and '-' flag for char.
-		return (print_char(va_arg(args, int)));
+		count += handle_format(format[*i], args, flags);
+		(*i)++;
 	}
-	if (specifier == 's')
-	{
-		// TODO: Implement width, precision, and '-' for string.
-		// char *str = va_arg(args, char *);
-		// return (print_string(str, flags));
-	}
-	return (0);
+	return (count);
 }
 
 int	ft_printf(const char *format, ...)
@@ -68,30 +65,12 @@ int	ft_printf(const char *format, ...)
 	while (format[i])
 	{
 		if (format[i] == '%')
-		{
-			t_flags flags = init_flags();
-			i++;
-			// --- PARSING STAGE ---
-			// This loop parses flags like '-', '0', etc.
-			while (format[i] == '-' || format[i] == '0')
-			{
-				if (format[i] == '-')
-					flags.minus = 1;
-				if (format[i] == '0')
-					flags.zero = 1;
-				i++;
-			}
-			// TODO: Add parsing for width, precision, '#', '+', ' ' here.
-
-			// --- DISPATCH STAGE ---
-			// After parsing, call the handler with the populated flags struct.
-			total_len += handle_format(format[i], args, flags);
-		}
+			total_len += process_format_spec(format, &i, args);
 		else
 		{
-			total_len += print_char(format[i]);
+			total_len += putchar_count(format[i]);
+			i++;
 		}
-		i++;
 	}
 	va_end(args);
 	return (total_len);
