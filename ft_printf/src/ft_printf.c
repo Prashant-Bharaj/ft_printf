@@ -6,11 +6,11 @@
 /*   By: prasingh <prasingh@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 19:32:17 by prasingh          #+#    #+#             */
-/*   Updated: 2025/12/07 22:49:21 by prasingh         ###   ########.fr       */
+/*   Updated: 2025/12/08 14:28:33 by prasingh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 
 static int	handle_format(char specifier, va_list args, t_flags flags)
 {
