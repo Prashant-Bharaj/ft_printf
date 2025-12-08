@@ -50,11 +50,18 @@ static int	print_int_content(char *str, int str_len, t_flags flags, int sign)
 	if (!flags.minus)
 	{
 		if (flags.zero && !flags.precision_set)
+		{
+			count += print_int_sign(flags, sign);
 			count += print_padding(flags.width - content_width, 1);
+		}
 		else
+		{
 			count += print_padding(flags.width - content_width, 0);
+			count += print_int_sign(flags, sign);
+		}
 	}
-	count += print_int_sign(flags, sign);
+	else
+		count += print_int_sign(flags, sign);
 	if (flags.precision_set && flags.precision > str_len)
 		count += print_padding(flags.precision - str_len, 1);
 	if (str_len > 0)

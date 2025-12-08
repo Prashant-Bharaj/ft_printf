@@ -80,10 +80,28 @@ int	handle_pointer(va_list args, t_flags flags)
 	int					count;
 	int					str_len;
 	int					precision;
+	int					is_null;
 
 	ptr = (unsigned long long)va_arg(args, void *);
-	if (ptr == 0)
-		return (putstr_count("(nil)", -1));
+	is_null = (ptr == 0);
+	if (is_null)
+	{
+		str_len = 5;
+		if (flags.precision_set && flags.precision == 0)
+			str_len = 0;
+		if (flags.precision_set && flags.precision > str_len)
+			precision = flags.precision;
+		else
+			precision = str_len;
+		count = 0;
+		if (!flags.minus)
+			count += print_padding(flags.width - precision, 0);
+		if (str_len > 0)
+			count += putstr_count("(nil)", -1);
+		if (flags.minus)
+			count += print_padding(flags.width - count, 0);
+		return (count);
+	}
 	str = ft_utoa_base(ptr, 16, 0);
 	if (!str)
 		return (0);

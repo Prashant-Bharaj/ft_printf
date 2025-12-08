@@ -53,25 +53,32 @@ int	handle_string(va_list args, t_flags flags)
 	int		str_len;
 	int		count;
 	int		precision;
+	int		is_null;
 
 	str = va_arg(args, char *);
+	is_null = (str == NULL);
 	if (!str)
 		str = "(null)";
 	if (flags.precision_set)
 		precision = flags.precision;
 	else
 		precision = -1;
-	str_len = get_string_precision(str, flags);
+	if (is_null && flags.precision_set)
+		str_len = 0;
+	else
+		str_len = get_string_precision(str, flags);
 	count = 0;
 	if (flags.minus)
 	{
-		count += putstr_count(str, precision);
+		if (!is_null || !flags.precision_set)
+			count += putstr_count(str, precision);
 		count += print_padding(flags.width - str_len, 0);
 	}
 	else
 	{
 		count += print_padding(flags.width - str_len, 0);
-		count += putstr_count(str, precision);
+		if (!is_null || !flags.precision_set)
+			count += putstr_count(str, precision);
 	}
 	return (count);
 }
