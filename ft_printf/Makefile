@@ -33,9 +33,6 @@ SRC         = $(SRC_DIR)/ft_printf.c \
 		$(SRC_DIR)/pointer_helpers.c
 OBJ         = $(SRC:.c=.o)
 
-BONUS_DIR   = $(SRC_DIR)/_bonus
-BONUS_SRC   = 
-BONUS_OBJ   = $(BONUS_SRC:.c=.o)
 
 CC          = cc
 CFLAGS      = -Wall -Wextra -Werror -I include -I $(LIBFT_DIR)
@@ -53,8 +50,8 @@ $(NAME): $(OBJ) $(LIBFT)
 	cp $(LIBFT) $(NAME)
 	$(AR) $(ARFLAGS) $(NAME) $(OBJ)
 
-bonus: $(LIBFT) $(NAME) $(BONUS_OBJ)
-	$(AR) $(ARFLAGS) $(NAME) $(BONUS_OBJ)
+bonus: $(LIBFT) $(NAME)
+	$(AR) $(ARFLAGS) $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
