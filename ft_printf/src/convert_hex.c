@@ -12,15 +12,42 @@
 
 #include "ft_printf.h"
 
-static int	print_hex_body_part(char *str, int str_len, t_flags flags,
+static char	*extract_hex_str(va_list args, int uppercase, unsigned int *n)
+{
+	char	*str;
+
+	*n = va_arg(args, unsigned int);
+	str = ft_utoa_base(*n, 16, uppercase);
+	return (str);
+}
+
+static int	calculate_hex_prefix_len(t_flags flags, unsigned int n)
+{
+	if (flags.hash && n != 0)
+		return (2);
+	return (0);
+}
+
+static int	print_hex_left_part(t_flags flags, int precision, int prefix_len,
+		int uppercase)
+{
+	int	count;
+	int	padding_width;
+
+	padding_width = calculate_left_padding_width(flags, precision, prefix_len);
+	count = print_left_padding(flags, padding_width);
+	if (prefix_len > 0)
+		count += print_hex_prefix(uppercase);
+	return (count);
+}
+
+static int	print_hex_formatted_content(char *str, int str_len, t_flags flags,
 		int count)
 {
-	if (flags.precision_set && flags.precision > str_len)
-		count += print_padding(flags.precision - str_len, 1);
+	count += print_precision_padding(flags, str_len);
 	if (str_len > 0)
 		count += putstr_count(str, -1);
-	if (flags.minus)
-		count += print_padding(flags.width - count, 0);
+	count += print_right_padding(flags, flags.width, count);
 	return (count);
 }
 
@@ -28,109 +55,17 @@ int	handle_hex(va_list args, t_flags flags, int uppercase)
 {
 	unsigned int	n;
 	char			*str;
-	int				count;
 	int				str_len;
-	int				precision;
+	int				count;
 
-	n = va_arg(args, unsigned int);
-	str = ft_utoa_base(n, 16, uppercase);
+	str = extract_hex_str(args, uppercase, &n);
 	if (!str)
 		return (0);
 	str_len = ft_strlen(str);
-	if (flags.precision_set && flags.precision == 0 && n == 0)
-		str_len = 0;
-	if (flags.precision_set && flags.precision > str_len)
-		precision = flags.precision;
-	else
-		precision = str_len;
-	count = 0;
-	if (!flags.minus)
-	{
-		if (flags.hash && n != 0)
-		{
-			if (flags.zero && !flags.precision_set)
-				count += print_padding(flags.width - precision - 2, 1);
-			else
-				count += print_padding(flags.width - precision - 2, 0);
-		}
-		else
-		{
-			if (flags.zero && !flags.precision_set)
-				count += print_padding(flags.width - precision, 1);
-			else
-				count += print_padding(flags.width - precision, 0);
-		}
-	}
-	if (flags.hash && n != 0)
-	{
-		if (uppercase)
-			count += putstr_count("0X", -1);
-		else
-			count += putstr_count("0x", -1);
-	}
-	count = print_hex_body_part(str, str_len, flags, count);
-	free(str);
-	return (count);
-}
-
-int	handle_pointer(va_list args, t_flags flags)
-{
-	unsigned long long	ptr;
-	char				*str;
-	int					count;
-	int					str_len;
-	int					precision;
-	int					is_null;
-
-	ptr = (unsigned long long)va_arg(args, void *);
-	is_null = (ptr == 0);
-	if (is_null)
-	{
-		str_len = 5;
-		if (flags.precision_set && flags.precision == 0)
-			str_len = 0;
-		if (flags.precision_set && flags.precision > str_len)
-			precision = flags.precision;
-		else
-			precision = str_len;
-		count = 0;
-		if (!flags.minus)
-			count += print_padding(flags.width - precision, 0);
-		if (str_len > 0)
-			count += putstr_count("(nil)", -1);
-		if (flags.minus)
-			count += print_padding(flags.width - count, 0);
-		return (count);
-	}
-	str = ft_utoa_base(ptr, 16, 0);
-	if (!str)
-		return (0);
-	str_len = ft_strlen(str);
-	if (flags.precision_set && flags.precision == 0 && ptr == 0)
-		str_len = 0;
-	if (flags.precision_set && flags.precision > str_len)
-		precision = flags.precision;
-	else
-		precision = str_len;
-	count = 0;
-	if (!flags.minus)
-	{
-		if (flags.zero && !flags.precision_set)
-		{
-			count += putstr_count("0x", -1);
-			count += print_padding(flags.width - precision - 2, 1);
-		}
-		else
-			count += print_padding(flags.width - precision - 2, 0);
-	}
-	if (flags.minus || !flags.zero || flags.precision_set)
-		count += putstr_count("0x", -1);
-	if (flags.precision_set && flags.precision > str_len)
-		count += print_padding(flags.precision - str_len, 1);
-	if (str_len > 0)
-		count += putstr_count(str, -1);
-	if (flags.minus)
-		count += print_padding(flags.width - count, 0);
+	str_len = calculate_effective_str_len(str_len, flags, (n == 0));
+	count = print_hex_left_part(flags, calculate_effective_precision(flags,
+				str_len), calculate_hex_prefix_len(flags, n), uppercase);
+	count = print_hex_formatted_content(str, str_len, flags, count);
 	free(str);
 	return (count);
 }

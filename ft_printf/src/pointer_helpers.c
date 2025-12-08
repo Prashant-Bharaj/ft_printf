@@ -1,8 +1,8 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                  :+:      :+:    :+:   */
-/*                                                    ft +:+         +:+     */
+/*   pointer_helpers.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
 /*   By: prasingh <prasingh@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 19:32:17 by prasingh          #+#    #+#             */
@@ -12,47 +12,16 @@
 
 #include "ft_printf.h"
 
-int	putchar_count(char c)
+int	print_pointer_prefix_early(t_flags flags, int precision)
 {
-	write(1, &c, 1);
-	return (1);
-}
+	int	count;
 
-int	putstr_count(char *str, int precision)
-{
-	int	len;
-	int	i;
-
-	if (!str)
-		str = "(null)";
-	len = ft_strlen(str);
-	if (precision >= 0 && precision < len)
-		len = precision;
-	i = 0;
-	while (i < len)
-	{
-		write(1, &str[i], 1);
-		i++;
-	}
-	return (len);
-}
-
-int	print_padding(int count, int zero_flag)
-{
-	int		i;
-	char	c;
-
-	if (count <= 0)
-		return (0);
-	if (zero_flag)
-		c = '0';
-	else
-		c = ' ';
-	i = 0;
-	while (i < count)
-	{
-		write(1, &c, 1);
-		i++;
-	}
+	count = putstr_count("0x", -1);
+	count += print_padding(flags.width - precision - 2, 1);
 	return (count);
+}
+
+int	print_pointer_prefix_late(t_flags flags)
+{
+	return (putstr_count("0x", -1));
 }

@@ -1,8 +1,8 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                  :+:      :+:    :+:   */
-/*                                                    ft +:+         +:+     */
+/*   hex_calculations.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
 /*   By: prasingh <prasingh@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 19:32:17 by prasingh          #+#    #+#             */
@@ -12,47 +12,30 @@
 
 #include "ft_printf.h"
 
-int	putchar_count(char c)
+int	calculate_effective_str_len(int str_len, t_flags flags, int is_zero)
 {
-	write(1, &c, 1);
-	return (1);
-}
-
-int	putstr_count(char *str, int precision)
-{
-	int	len;
-	int	i;
-
-	if (!str)
-		str = "(null)";
-	len = ft_strlen(str);
-	if (precision >= 0 && precision < len)
-		len = precision;
-	i = 0;
-	while (i < len)
-	{
-		write(1, &str[i], 1);
-		i++;
-	}
-	return (len);
-}
-
-int	print_padding(int count, int zero_flag)
-{
-	int		i;
-	char	c;
-
-	if (count <= 0)
+	if (flags.precision_set && flags.precision == 0 && is_zero)
 		return (0);
-	if (zero_flag)
-		c = '0';
-	else
-		c = ' ';
-	i = 0;
-	while (i < count)
-	{
-		write(1, &c, 1);
-		i++;
-	}
-	return (count);
+	return (str_len);
+}
+
+int	calculate_effective_precision(t_flags flags, int str_len)
+{
+	if (flags.precision_set && flags.precision > str_len)
+		return (flags.precision);
+	return (str_len);
+}
+
+int	should_use_zero_padding(t_flags flags)
+{
+	if (flags.zero && !flags.precision_set)
+		return (1);
+	return (0);
+}
+
+int	calculate_left_padding_width(t_flags flags, int precision, int prefix_len)
+{
+	if (flags.minus)
+		return (0);
+	return (flags.width - precision - prefix_len);
 }

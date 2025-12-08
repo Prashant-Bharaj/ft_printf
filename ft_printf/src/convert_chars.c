@@ -15,96 +15,50 @@
 int	handle_char(va_list args, t_flags flags)
 {
 	char	c;
-	int		count;
 
 	c = va_arg(args, int);
-	count = 0;
-	if (flags.minus)
-	{
-		count += putchar_count(c);
-		count += print_padding(flags.width - 1, 0);
-	}
-	else
-	{
-		count += print_padding(flags.width - 1, 0);
-		count += putchar_count(c);
-	}
-	return (count);
+	return (print_char_with_padding(c, flags));
 }
 
-static int	get_string_precision(char *str, t_flags flags)
+static int	print_string_formatted(char *str, int str_len, t_flags flags,
+		int precision)
 {
-	int	str_len;
-	int	precision;
+	int	count;
 
-	if (flags.precision_set)
-		precision = flags.precision;
+	count = print_string_left_padding(flags, str_len);
+	if (flags.minus)
+	{
+		count += print_string_content(str, str_len, precision);
+		count += print_padding(flags.width - count, 0);
+	}
 	else
-		precision = -1;
-	str_len = ft_strlen(str);
-	if (precision >= 0 && precision < str_len)
-		str_len = precision;
-	return (str_len);
+		count += print_string_content(str, str_len, precision);
+	return (count);
 }
 
 int	handle_string(va_list args, t_flags flags)
 {
 	char	*str;
 	int		str_len;
-	int		count;
 	int		precision;
 	int		is_null;
 
-	str = va_arg(args, char *);
-	is_null = (str == NULL);
-	if (!str)
-		str = "(null)";
+	is_null = extract_string_value(args, &str);
 	if (flags.precision_set)
 		precision = flags.precision;
 	else
 		precision = -1;
-	if (is_null && flags.precision_set)
-	{
-		if (flags.precision >= 6)
-			str_len = 6;
-		else
-			str_len = 0;
-	}
-	else
-		str_len = get_string_precision(str, flags);
-	count = 0;
-	if (flags.minus)
-	{
-		if (str_len > 0)
-			count += putstr_count(str, precision);
-		count += print_padding(flags.width - str_len, 0);
-	}
-	else
-	{
-		count += print_padding(flags.width - str_len, 0);
-		if (str_len > 0)
-			count += putstr_count(str, precision);
-	}
-	return (count);
+	str_len = calculate_string_len(str, flags, is_null);
+	return (print_string_formatted(str, str_len, flags, precision));
 }
 
 int	handle_percent(t_flags flags)
 {
 	int	count;
 
-	count = 0;
+	count = print_percent_left_padding(flags);
+	count += putchar_count('%');
 	if (flags.minus)
-	{
-		count += putchar_count('%');
-		count += print_padding(flags.width - 1, 0);
-	}
-	else
-	{
-		if (flags.zero)
-			count += print_padding(flags.width - 1, 1);
-		else
-			count += print_padding(flags.width - 1, 0);
-		count += putchar_count('%');
-	}
+		count += print_padding(flags.width - count, 0);
 	return (count);
 }

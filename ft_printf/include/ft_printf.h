@@ -59,4 +59,30 @@ int		putstr_count(char *str, int precision);
 int		print_padding(int count, int zero_flag);
 char	*ft_utoa_base(unsigned long long n, int base, int uppercase);
 
+int		calculate_effective_str_len(int str_len, t_flags flags, int is_zero);
+int		calculate_effective_precision(t_flags flags, int str_len);
+int		should_use_zero_padding(t_flags flags);
+int		calculate_left_padding_width(t_flags flags, int precision, int prefix_len);
+int		print_hex_prefix(int uppercase);
+int		print_precision_padding(t_flags flags, int str_len);
+int		print_right_padding(t_flags flags, int width, int current_count);
+int		print_left_padding(t_flags flags, int padding_width);
+int		print_pointer_prefix_early(t_flags flags, int precision);
+int		print_pointer_prefix_late(t_flags flags);
+int		print_int_sign(t_flags flags, int sign);
+int		calculate_int_precision(t_flags flags, int str_len);
+int		calculate_int_content_width(t_flags flags, int str_len, int sign);
+int		print_int_left_padding(t_flags flags, int content_width, int sign);
+int		print_number_body(char *str, int str_len, t_flags flags);
+int		get_string_precision(char *str, t_flags flags);
+int		calculate_null_string_len(t_flags flags);
+int		print_char_with_padding(char c, t_flags flags);
+int		print_string_content(char *str, int str_len, int precision);
+int		print_percent_left_padding(t_flags flags);
+int		get_string_precision(char *str, t_flags flags);
+int		calculate_null_string_len(t_flags flags);
+int		extract_string_value(va_list args, char **str);
+int		calculate_string_len(char *str, t_flags flags, int is_null);
+int		print_string_left_padding(t_flags flags, int str_len);
+
 #endif

@@ -1,8 +1,8 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                  :+:      :+:    :+:   */
-/*                                                    ft +:+         +:+     */
+/*   hex_formatting.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
 /*   By: prasingh <prasingh@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 19:32:17 by prasingh          #+#    #+#             */
@@ -12,47 +12,30 @@
 
 #include "ft_printf.h"
 
-int	putchar_count(char c)
+int	print_hex_prefix(int uppercase)
 {
-	write(1, &c, 1);
-	return (1);
+	if (uppercase)
+		return (putstr_count("0X", -1));
+	return (putstr_count("0x", -1));
 }
 
-int	putstr_count(char *str, int precision)
+int	print_precision_padding(t_flags flags, int str_len)
 {
-	int	len;
-	int	i;
-
-	if (!str)
-		str = "(null)";
-	len = ft_strlen(str);
-	if (precision >= 0 && precision < len)
-		len = precision;
-	i = 0;
-	while (i < len)
-	{
-		write(1, &str[i], 1);
-		i++;
-	}
-	return (len);
+	if (flags.precision_set && flags.precision > str_len)
+		return (print_padding(flags.precision - str_len, 1));
+	return (0);
 }
 
-int	print_padding(int count, int zero_flag)
+int	print_right_padding(t_flags flags, int width, int current_count)
 {
-	int		i;
-	char	c;
+	if (flags.minus)
+		return (print_padding(width - current_count, 0));
+	return (0);
+}
 
-	if (count <= 0)
+int	print_left_padding(t_flags flags, int padding_width)
+{
+	if (flags.minus)
 		return (0);
-	if (zero_flag)
-		c = '0';
-	else
-		c = ' ';
-	i = 0;
-	while (i < count)
-	{
-		write(1, &c, 1);
-		i++;
-	}
-	return (count);
+	return (print_padding(padding_width, should_use_zero_padding(flags)));
 }

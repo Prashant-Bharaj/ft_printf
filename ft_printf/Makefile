@@ -19,9 +19,18 @@ SRC_DIR     = src
 SRC         = $(SRC_DIR)/ft_printf.c \
 		$(SRC_DIR)/parse_flags.c \
 		$(SRC_DIR)/utils.c \
+		$(SRC_DIR)/utoa_helpers.c \
+		$(SRC_DIR)/char_helpers.c \
+		$(SRC_DIR)/string_helpers.c \
 		$(SRC_DIR)/convert_chars.c \
-		$(SRC_DIR)/convert_numbers.c \
-		$(SRC_DIR)/convert_hex.c
+		$(SRC_DIR)/number_helpers.c \
+		$(SRC_DIR)/convert_int.c \
+		$(SRC_DIR)/convert_unsigned.c \
+		$(SRC_DIR)/hex_calculations.c \
+		$(SRC_DIR)/hex_formatting.c \
+		$(SRC_DIR)/convert_hex.c \
+		$(SRC_DIR)/convert_pointer.c \
+		$(SRC_DIR)/pointer_helpers.c
 OBJ         = $(SRC:.c=.o)
 
 BONUS_DIR   = $(SRC_DIR)/_bonus
