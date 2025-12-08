@@ -64,20 +64,25 @@ int	handle_string(va_list args, t_flags flags)
 	else
 		precision = -1;
 	if (is_null && flags.precision_set)
-		str_len = 0;
+	{
+		if (flags.precision >= 6)
+			str_len = 6;
+		else
+			str_len = 0;
+	}
 	else
 		str_len = get_string_precision(str, flags);
 	count = 0;
 	if (flags.minus)
 	{
-		if (!is_null || !flags.precision_set)
+		if (str_len > 0)
 			count += putstr_count(str, precision);
 		count += print_padding(flags.width - str_len, 0);
 	}
 	else
 	{
 		count += print_padding(flags.width - str_len, 0);
-		if (!is_null || !flags.precision_set)
+		if (str_len > 0)
 			count += putstr_count(str, precision);
 	}
 	return (count);
