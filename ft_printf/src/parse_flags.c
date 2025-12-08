@@ -70,6 +70,8 @@ static void	parse_width(const char *format, int *i, t_flags *flags,
 			flags->width = flags->width * 10 + (format[*i] - '0');
 			(*i)++;
 		}
+		if(format[*i]  == '%')
+			flags->width = 0;
 	}
 }
 
