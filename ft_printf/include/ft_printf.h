@@ -13,10 +13,10 @@
 #ifndef LIBFTPRINTF_H
 # define LIBFTPRINTF_H
 
-# include <stdarg.h>
-# include <unistd.h>
-# include <stdlib.h>
 # include "libft.h"
+# include <stdarg.h>
+# include <stdlib.h>
+# include <unistd.h>
 
 /**
  * @brief A struct to hold all parsed formatting flags for a specifier.
@@ -39,7 +39,7 @@ typedef struct s_flags
 	int	width;
 	int	precision;
 	int	precision_set;
-}	t_flags;
+}		t_flags;
 
 int		ft_printf(const char *format, ...);
 
@@ -62,7 +62,8 @@ char	*ft_utoa_base(unsigned long long n, int base, int uppercase);
 int		calculate_effective_str_len(int str_len, t_flags flags, int is_zero);
 int		calculate_effective_precision(t_flags flags, int str_len);
 int		should_use_zero_padding(t_flags flags);
-int		calculate_left_padding_width(t_flags flags, int precision, int prefix_len);
+int		calculate_left_padding_width(t_flags flags, int precision,
+			int prefix_len);
 int		print_hex_prefix(int uppercase);
 int		print_precision_padding(t_flags flags, int str_len);
 int		print_right_padding(t_flags flags, int width, int current_count);
