@@ -6,7 +6,7 @@
 /*   By: prasingh <prasingh@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 19:32:17 by prasingh          #+#    #+#             */
-/*   Updated: 2025/12/09 00:36:38 by prasingh         ###   ########.fr       */
+/*   Updated: 2025/12/09 13:50:09 by prasingh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	print_pointer_with_formatting(char *str, int str_len, t_flags flags)
 			count += print_left_padding(flags, padding_width);
 	}
 	if (flags.minus || !should_use_zero_padding(flags))
-		count += print_pointer_prefix_late(flags);
+		count += print_pointer_prefix_late();
 	count += print_precision_padding(flags, str_len);
 	if (str_len > 0)
 		count += putstr_count(str, -1);

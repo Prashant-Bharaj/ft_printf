@@ -6,7 +6,7 @@
 /*   By: prasingh <prasingh@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 18:47:18 by prasingh          #+#    #+#             */
-/*   Updated: 2025/12/08 15:19:26 by prasingh         ###   ########.fr       */
+/*   Updated: 2025/12/09 14:01:52 by prasingh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int		print_precision_padding(t_flags flags, int str_len);
 int		print_right_padding(t_flags flags, int width, int current_count);
 int		print_left_padding(t_flags flags, int padding_width);
 int		print_pointer_prefix_early(t_flags flags, int precision);
-int		print_pointer_prefix_late(t_flags flags);
+int		print_pointer_prefix_late(void);
 int		print_int_sign(t_flags flags, int sign);
 int		calculate_int_precision(t_flags flags, int str_len);
 int		calculate_int_content_width(t_flags flags, int str_len, int sign);
